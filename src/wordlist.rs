@@ -1,4 +1,41 @@
-const words: [&'static str] = [
+use crate::Charset;
+use rand::seq::IteratorRandom;
+use rand::seq::SliceRandom;
+
+pub fn get_random_element(charset: Charset) -> String {
+    if charset == Charset::Words {
+        return XKCD_WORDS
+            .choose(&mut rand::thread_rng())
+            .unwrap()
+            .to_string();
+    }
+
+    let charset_str = match charset {
+        Charset::Lower => LOWERCASE_LETTERS,
+        Charset::Upper => UPPERCASE_LETTERS,
+        Charset::Alpha => ALPHABETIC,
+        Charset::AlphaNum => ALPHANUMERIC,
+        Charset::Dec => DEC,
+        Charset::Hex => HEX,
+        Charset::Words => unreachable!(),
+    };
+
+    charset_str
+        .chars()
+        .choose(&mut rand::thread_rng())
+        .unwrap()
+        .to_string()
+}
+
+const LOWERCASE_LETTERS: &'static str = "abcdefghijklmnopqrstuvwxyz";
+const UPPERCASE_LETTERS: &'static str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const ALPHABETIC: &'static str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const ALPHANUMERIC: &'static str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const DEC: &'static str = "0123456789";
+const HEX: &'static str = "0123456789ABCDEF";
+
+// These words are from https://xkcd.pw
+const XKCD_WORDS: &[&'static str] = &[
     "abacus",
     "abdomen",
     "abdominal",
